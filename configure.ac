@@ -28,10 +28,15 @@ AC_CHECK_FUNCS([memset])
 
 # pkgconfig
 PKG_CHECK_MODULES([OPENSSL], [openssl])
-PKG_CHECK_MODULES([LUA], [lua])
+
+# determine the name of the installed lua package
+for lua_pkg in lua lua5.1 lua5.0 ; do
+	$PKGCONFIG --exists $lua_pkg && break
+done
+PKG_CHECK_MODULES([LUA], [$lua_pkg])
 
 # lua libdir
-LUALIBDIR="`$PKGCONFIG --variable=libdir lua`"
+LUALIBDIR="`$PKGCONFIG --variable=libdir $lua_pkg`"
 
 # dest of headers
 CRYPTOINC="${includedir}/${PACKAGE_NAME}"
